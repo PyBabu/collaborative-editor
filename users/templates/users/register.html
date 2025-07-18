@@ -1,0 +1,16 @@
+<!-- templates/users/register.html -->
+{% extends 'users/base.html' %}
+{% block content %}
+<h2>Register</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-primary">Register</button>
+</form>
+
+<hr>
+<p>Or register using:</p>
+<a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-danger">Google</a>
+<a href="{% url 'social:begin' 'github' %}" class="btn btn-dark">GitHub</a>
+<a href="{% url 'social:begin' 'facebook' %}" class="btn btn-primary">Facebook</a>
+{% endblock %}

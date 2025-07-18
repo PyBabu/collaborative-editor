@@ -1,0 +1,68 @@
+{% extends 'users/base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>{{ document.title }}</h2>
+
+  <!-- Real-time editable text area -->
+  <textarea id="editor" class="form-control" rows="15">{{ document.content }}</textarea>
+
+  <!-- Grammar check button -->
+  <button id="grammarBtn" class="btn btn-warning mt-3">Check Grammar</button>
+
+  <!-- Suggestions area -->
+  <h5 class="mt-4">Suggestions:</h5>
+  <ul id="grammarSuggestions" class="list-group"></ul>
+</div>
+
+<!-- JS Script -->
+<script>
+  // WebSocket setup
+  const docId = "{{ document.id }}";
+  const socket = new WebSocket(`ws://${window.location.host}/ws/editor/${docId}/`);
+  const textarea = document.getElementById('editor');
+
+  // Send message on typing
+  textarea.addEventListener('input', () => {
+    socket.send(JSON.stringify({
+      'message': textarea.value
+    }));
+  });
+
+  // Receive message and update text area
+  socket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    textarea.value = data.message;
+  }
+
+  // Grammar check request
+  const grammarBtn = document.getElementById("grammarBtn");
+  grammarBtn.addEventListener("click", () => {
+    fetch("{% url 'grammar_check' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{ csrf_token }}"
+      },
+      body: JSON.stringify({ text: textarea.value })
+    })
+    .then(response => response.json())
+    .then(data => {
+      const suggestionsList = document.getElementById("grammarSuggestions");
+      suggestionsList.innerHTML = '';
+      data.matches.forEach(match => {
+        const li = document.createElement("li");
+        li.classList.add("list-group-item");
+        li.innerText = match.message;
+        suggestionsList.appendChild(li);
+      });
+
+      if (data.matches.length === 0) {
+        const li = document.createElement("li");
+        li.classList.add("list-group-item", "text-success");
+        li.innerText = "No grammar issues found!";
+        suggestionsList.appendChild(li);
+      }
+    });
+  });
+</script>
+{% endblock %}

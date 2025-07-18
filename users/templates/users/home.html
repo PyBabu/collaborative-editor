@@ -1,0 +1,13 @@
+<!-- templates/users/home.html -->
+{% extends 'users/base.html' %}
+{% block content %}
+<h1>Welcome to the Real-Time Collab Editor 🚀</h1>
+<p>This is a collaborative document editing tool where multiple users can work together in real-time.</p>
+
+{% if user.is_authenticated %}
+    <a href="{% url 'dashboard' %}" class="btn btn-success">Go to Dashboard</a>
+{% else %}
+    <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+    <a href="{% url 'register' %}" class="btn btn-secondary">Register</a>
+{% endif %}
+{% endblock %}

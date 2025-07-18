@@ -1,0 +1,16 @@
+{% extends 'users/base.html' %}
+{% block content %}
+<h2>Your Documents</h2>
+
+<a href="{% url 'create_document' %}" class="btn btn-success mb-3">+ New Document</a>
+
+<ul class="list-group">
+  {% for doc in documents %}
+    <li class="list-group-item">
+      <a href="{% url 'editor' doc.id %}">{{ doc.title }}</a>
+    </li>
+  {% empty %}
+    <li class="list-group-item">No documents yet.</li>
+  {% endfor %}
+</ul>
+{% endblock %}
