@@ -1,236 +1,1051 @@
 {% extends 'users/base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="hero-section">
-  <div class="container py-5">
-    <div class="row align-items-center">
-      <div class="col-lg-6 mb-5 mb-lg-0">
-        <h1 class="display-4 fw-bold mb-4">
-          Real-Time <span class="text-gradient">Collab Editor</span> 
-          <span class="wave-emoji">🚀</span>
+<!-- Modern Hero Section -->
+<section class="hero-section">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-text">
+        {% comment %} <span class="badge">v2.0 LAUNCHED</span> {% endcomment %}
+        <h1>
+          <span class="text-gradient">Collab</span> makes 
+          <span class="txt-rotate" data-period="2000" data-rotate='["teamwork effortless.", "editing smarter.", "you productive."]'></span>
         </h1>
-        <p class="lead mb-4">
-          Create, edit, and collaborate on documents with your team in real-time. 
-          Our powerful editor lets multiple users work together seamlessly with 
-          live updates and AI-powered suggestions.
-        </p>
+        <p class="subtitle">The all-in-one platform for real-time collaboration with AI-powered workflows.</p>
         
-        <div class="d-flex flex-wrap gap-3 mb-5">
+        <div class="cta-buttons">
           {% if user.is_authenticated %}
-            <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg px-4 py-3 shadow-sm">
-              <i class="fas fa-rocket me-2"></i> Go to Dashboard
-            </a>
-            <a href="{% url 'create_document' %}" class="btn btn-outline-primary btn-lg px-4 py-3">
-              <i class="fas fa-plus me-2"></i> New Document
+            <a href="{% url 'dashboard' %}" class="btn primary">
+              <i class="fas fa-rocket"></i> Launch Dashboard
             </a>
           {% else %}
-            <a href="{% url 'login' %}" class="btn btn-primary btn-lg px-4 py-3 shadow-sm">
-              <i class="fas fa-sign-in-alt me-2"></i> Get Started
-            </a>
-            <a href="{% url 'register' %}" class="btn btn-outline-primary btn-lg px-4 py-3">
-              <i class="fas fa-user-plus me-2"></i> Create Account
+            <a href="{% url 'register' %}" class="btn primary">
+              <i class="fas fa-flash"></i> Get Started - Free
             </a>
           {% endif %}
+          <a href="#features" class="btn secondary">
+            <i class="fas fa-eye"></i> See Features
+          </a>
         </div>
         
-        <div class="d-flex align-items-center text-muted">
-          <div class="d-flex me-4">
-            <div class="avatar-group me-2">
-              <span class="avatar-sm bg-primary">A</span>
-              <span class="avatar-sm bg-success">B</span>
-              <span class="avatar-sm bg-warning">C</span>
+        <div class="trust-badges">
+          <div class="trust-item">
+            <div class="avatar-group">
+              <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User">
+              <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User">
+              <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="User">
             </div>
-            <span>Join 1,000+ users</span>
+            <span>Trusted by 5,000+ teams</span>
           </div>
-          <div>
-            <i class="fas fa-shield-alt me-2"></i> Secure & Private
+          <div class="trust-item">
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+            <span>4.9/5</span>
           </div>
         </div>
       </div>
       
-      <div class="col-lg-6">
-        <div class="editor-preview shadow-lg rounded-3 overflow-hidden">
-          <div class="editor-header bg-light p-3 d-flex align-items-center">
-            <div class="d-flex me-3">
-              <span class="dot bg-danger me-2"></span>
-              <span class="dot bg-warning me-2"></span>
-              <span class="dot bg-success"></span>
-            </div>
-            <div class="flex-grow-1 text-center fw-bold">
-              collaboration-document.md
-            </div>
-            <div class="online-users">
-              <i class="fas fa-users me-1"></i> 3
-            </div>
+      <div class="hero-image">
+        <div class="editor-preview">
+          <div class="editor-tabs">
+            <div class="tab active">collab-doc.md</div>
+            <div class="tab">team-notes.md</div>
+            <div class="tab">ideas.md</div>
           </div>
-          <div class="editor-body bg-white p-4">
+          <div class="editor-body">
             <div class="document-content">
-              <p class="text-primary mb-2"># Project Brainstorm</p>
-              <p class="mb-2"><span class="user-caret bg-primary"></span> <strong>@Alex:</strong> Let's discuss the new features</p>
-              <p class="mb-2"><span class="user-caret bg-success"></span> <strong>@Sam:</strong> I think we should focus on the editor first</p>
-              <p class="mb-2"><span class="user-caret bg-warning"></span> <strong>@Jordan:</strong> Working on the real-time sync now</p>
-              <p class="text-muted mt-3">// Type here to join the conversation...</p>
+              <p class="doc-header"># Welcome to Collab</p>
+              <p class="comment"><span class="user">@Alex</span>: Working on the new editor features <span class="timestamp">// Just now</span></p>
+              
+              <div class="code-block">
+                <p class="code-line"><span class="keyword">function</span> <span class="function">collaborate</span>() {</p>
+                <p class="code-line"><span class="keyword">const</span> <span class="variable">features</span> = [<span class="string">"realtime"</span>, <span class="string">"AI"</span>];</p>
+                <p class="code-line"><span class="keyword">return</span> <span class="variable">amazing</span>;</p>
+                <p class="code-line">}</p>
+              </div>
+              
+              <p class="comment"><span class="user">@Sam</span>: Added the new function above <span class="timestamp">// 2m ago</span></p>
+              <div class="input-area">
+                <p>// Type here to collaborate...</p>
+              </div>
+            </div>
+          </div>
+          <div class="editor-footer">
+            <div class="status">
+              <div class="online-indicator"></div>
+              <span>3 online</span>
+            </div>
+            <div class="ai-indicator">
+              <i class="fas fa-robot"></i>
+              <span>AI Assistant Ready</span>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<div class="features-section py-5 bg-light">
+<!-- Features Section -->
+<section id="features" class="features-section">
   <div class="container">
-    <h2 class="text-center mb-5">Powerful Collaboration Features</h2>
+    <div class="section-header">
+      <h2>Supercharge Your Workflow</h2>
+      <p>Everything your team needs to collaborate effectively</p>
+    </div>
     
-    <div class="row g-4">
-      <div class="col-md-4">
-        <div class="feature-card p-4 h-100 shadow-sm rounded-3 bg-white">
-          <div class="feature-icon bg-primary bg-opacity-10 text-primary rounded-circle mb-3">
-            <i class="fas fa-users"></i>
-          </div>
-          <h4>Real-Time Editing</h4>
-          <p>See changes from other collaborators instantly as they type, with live cursors and presence indicators.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-bolt"></i>
+        </div>
+        <h3>Real-Time Collaboration</h3>
+        <p>See teammates' cursors and changes instantly with our low-latency sync engine.</p>
+        <a href="#" class="feature-link">
+          Learn more <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-robot"></i>
+        </div>
+        <h3>AI-Powered Assistance</h3>
+        <p>Get intelligent suggestions for code, content, and formatting as you work.</p>
+        <a href="#" class="feature-link">
+          Learn more <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-code-branch"></i>
+        </div>
+        <h3>Version Control</h3>
+        <p>Track every change and revert to any point in your document's history.</p>
+        <a href="#" class="feature-link">
+          Learn more <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <h3>Enterprise Security</h3>
+        <p>End-to-end encryption and compliance with industry security standards.</p>
+        <a href="#" class="feature-link">
+          Learn more <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-plug"></i>
+        </div>
+        <h3>Seamless Integrations</h3>
+        <p>Connect with your favorite tools like Slack, GitHub, and Google Drive.</p>
+        <a href="#" class="feature-link">
+          Learn more <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-mobile-alt"></i>
+        </div>
+        <h3>Cross-Platform</h3>
+        <p>Works flawlessly on desktop, tablet, and mobile devices.</p>
+        <a href="#" class="feature-link">
+          Learn more <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Tech Stack Section -->
+<section class="tech-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Built With Modern Tech</h2>
+      <p>Powering the future of collaboration</p>
+    </div>
+    
+    <div class="tech-grid">
+      <div class="tech-card">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg" alt="Django" loading="lazy">
+        <div class="tech-info">
+          <h4>Django</h4>
+          <p>Backend Framework</p>
         </div>
       </div>
       
-      <div class="col-md-4">
-        <div class="feature-card p-4 h-100 shadow-sm rounded-3 bg-white">
-          <div class="feature-icon bg-success bg-opacity-10 text-success rounded-circle mb-3">
-            <i class="fas fa-robot"></i>
-          </div>
-          <h4>AI Assistance</h4>
-          <p>Get smart suggestions for grammar, style, and content as you write.</p>
+      <div class="tech-card">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python" loading="lazy">
+        <div class="tech-info">
+          <h4>Python</h4>
+          <p>Programming Language</p>
         </div>
       </div>
       
-      <div class="col-md-4">
-        <div class="feature-card p-4 h-100 shadow-sm rounded-3 bg-white">
-          <div class="feature-icon bg-info bg-opacity-10 text-info rounded-circle mb-3">
-            <i class="fas fa-history"></i>
-          </div>
-          <h4>Version History</h4>
-          <p>Track changes and revert to any previous version of your document with ease.</p>
+      <div class="tech-card">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript" loading="lazy">
+        <div class="tech-info">
+          <h4>JavaScript</h4>
+          <p>Frontend Logic</p>
+        </div>
+      </div>
+      
+      <div class="tech-card">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" alt="PostgreSQL" loading="lazy">
+        <div class="tech-info">
+          <h4>PostgreSQL</h4>
+          <p>Database</p>
+        </div>
+      </div>
+      
+      <div class="tech-card">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg" alt="Redis" loading="lazy">
+        <div class="tech-info">
+          <h4>Redis</h4>
+          <p>Real-time Engine</p>
+        </div>
+      </div>
+      
+      <div class="tech-card">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="Docker" loading="lazy">
+        <div class="tech-info">
+          <h4>Docker</h4>
+          <p>Containerization</p>
         </div>
       </div>
     </div>
   </div>
-</div>
+</section>
+
+<!-- Developer Profile -->
+<section class="developer-section">
+  <div class="container">
+    <div class="developer-card">
+      <div class="developer-image">
+        <img src="{% static 'images/developer.jpg' %}" alt="Developer" loading="lazy">
+        <h3>Malik Babu</h3>
+        <p>Full Stack Python Developer</p>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-github"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-linkedin"></i></a>
+          <a href="#"><i class="fas fa-globe"></i></a>
+        </div>
+      </div>
+      <div class="developer-info">
+        <h2>About the Creator</h2>
+        <p class="intro">Building tools that enhance collaboration and productivity</p>
+        
+        <div class="about-content">
+          <p>With over 4+ years of experience in software development, I created Collab to solve the frustrations of modern teamwork. This platform combines:</p>
+          
+          <ul class="feature-list">
+            <li>
+              <i class="fas fa-check-circle"></i>
+              <span>Real-time collaboration technology</span>
+            </li>
+            <li>
+              <i class="fas fa-check-circle"></i>
+              <span>AI-powered writing assistance</span>
+            </li>
+            <li>
+              <i class="fas fa-check-circle"></i>
+              <span>Enterprise-grade security</span>
+            </li>
+          </ul>
+          
+          <p>I'm passionate about creating intuitive tools that people love to use every day. Collab represents hundreds of hours of dedicated development to perfect the collaborative editing experience.</p>
+        </div>
+        
+        <a href="mailto:your@email.com" class="btn primary">
+          <i class="fas fa-paper-plane"></i> Contact Me
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+  <div class="container">
+    <h2>Ready to Transform Your Teamwork?</h2>
+    <p>Join thousands of teams boosting their productivity with Collab</p>
+    <div class="cta-buttons">
+      <a href="{% url 'register' %}" class="btn primary">
+        <i class="fas fa-flash"></i> Start Free Trial
+      </a>
+      <a href="#demo" class="btn secondary">
+        <i class="fas fa-play"></i> Watch Demo
+      </a>
+    </div>
+  </div>
+</section>
 
 <style>
-  .hero-section {
-    padding: 5rem 0;
-    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  /* Modern Color Scheme */
+  :root {
+    --primary: #4f46e5;
+    --primary-dark: #4338ca;
+    --primary-light: #e0e7ff;
+    --secondary: #f9fafb;
+    --dark: #111827;
+    --light: #f9fafb;
+    --gray: #6b7280;
+    --gray-light: #e5e7eb;
+    --gray-dark: #374151;
+    --success: #10b981;
+    --info: #06b6d4;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --text: #111827;
+    --text-light: #6b7280;
+    --border: #e5e7eb;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   }
-  
+
+  /* Base Styles */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text);
+    line-height: 1.6;
+    background-color: #fff;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  section {
+    padding: 5rem 0;
+  }
+
+  h1, h2, h3, h4 {
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    gap: 0.5rem;
+  }
+
+  .btn i {
+    font-size: 0.9em;
+  }
+
+  .btn.primary {
+    background-color: var(--primary);
+    color: white;
+    box-shadow: var(--shadow);
+  }
+
+  .btn.primary:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .btn.secondary {
+    background-color: white;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+  }
+
+  .btn.secondary:hover {
+    background-color: var(--primary-light);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+
+  /* Hero Section */
+  .hero-section {
+    background-color: var(--dark);
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 70% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
+    z-index: 1;
+  }
+
+  .hero-content {
+    display: flex;
+    align-items: center;
+    min-height: 80vh;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-text {
+    flex: 1;
+    padding-right: 2rem;
+  }
+
+  .hero-image {
+    flex: 1;
+    position: relative;
+  }
+
+  .badge {
+    display: inline-block;
+    background-color: rgba(79, 70, 229, 0.2);
+    color: var(--primary);
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-text h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+  }
+
   .text-gradient {
-    background: linear-gradient(90deg, #4361ee, #3a0ca3);
+    background: linear-gradient(90deg, var(--primary), #8b5cf6);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-weight: 700;
   }
-  
-  .wave-emoji {
-    animation: wave 2s infinite;
-    display: inline-block;
-    transform-origin: 70% 70%;
+
+  .subtitle {
+    font-size: 1.25rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+    max-width: 600px;
   }
-  
-  @keyframes wave {
-    0% { transform: rotate(0deg); }
-    10% { transform: rotate(-10deg); }
-    20% { transform: rotate(12deg); }
-    30% { transform: rotate(-10deg); }
-    40% { transform: rotate(9deg); }
-    50% { transform: rotate(0deg); }
-    100% { transform: rotate(0deg); }
+
+  .cta-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
   }
-  
+
+  .trust-badges {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+  }
+
   .avatar-group {
     display: flex;
   }
-  
-  .avatar-sm {
-    width: 28px;
-    height: 28px;
+
+  .avatar-group img {
+    width: 2rem;
+    height: 2rem;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 0.7rem;
-    font-weight: bold;
-    margin-right: -8px;
-    border: 2px solid white;
+    border: 2px solid var(--dark);
+    margin-right: -0.75rem;
   }
-  
+
+  .stars {
+    color: var(--warning);
+  }
+
+  /* Editor Preview */
   .editor-preview {
-    border: 1px solid rgba(0,0,0,0.1);
-  }
-  
-  .dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    display: inline-block;
-  }
-  
-  .online-users {
-    background-color: #e9ecef;
-    padding: 0.2rem 0.5rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-  }
-  
-  .user-caret {
-    width: 8px;
-    height: 16px;
-    display: inline-block;
-    margin-right: 8px;
-    opacity: 0.7;
-  }
-  
-  .document-content {
-    font-family: 'Courier New', monospace;
-    line-height: 1.6;
-  }
-  
-  .feature-card {
+    background-color: var(--dark);
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    transform: perspective(1000px) rotateY(-5deg) rotateX(2deg);
     transition: transform 0.3s ease;
   }
-  
-  .feature-card:hover {
-    transform: translateY(-5px);
+
+  .editor-preview:hover {
+    transform: perspective(1000px) rotateY(-3deg) rotateX(1deg);
   }
-  
+
+  .editor-tabs {
+    display: flex;
+    background-color: #1f2937;
+    padding: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .editor-tabs .tab {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    color: var(--gray);
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+  }
+
+  .editor-tabs .tab.active {
+    color: white;
+    border-bottom-color: var(--primary);
+  }
+
+  .editor-body {
+    padding: 1.5rem;
+    background-color: #1f2937;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.875rem;
+  }
+
+  .doc-header {
+    color: #d8b4fe;
+    margin-bottom: 1rem;
+  }
+
+  .comment {
+    color: var(--gray-light);
+    margin-bottom: 1rem;
+  }
+
+  .user {
+    color: #4ade80;
+  }
+
+  .timestamp {
+    color: var(--gray);
+  }
+
+  .code-block {
+    background-color: #111827;
+    padding: 1rem;
+    border-left: 3px solid var(--primary);
+    margin-bottom: 1rem;
+    border-radius: 0.25rem;
+  }
+
+  .code-line {
+    margin-bottom: 0.5rem;
+  }
+
+  .keyword {
+    color: #93c5fd;
+  }
+
+  .function {
+    color: #fde047;
+  }
+
+  .variable {
+    color: #4ade80;
+  }
+
+  .string {
+    color: #fde047;
+  }
+
+  .input-area {
+    background-color: rgba(17, 24, 39, 0.5);
+    border-left: 4px solid var(--primary);
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    color: var(--gray);
+  }
+
+  .editor-footer {
+    display: flex;
+    justify-content: space-between;
+    background-color: #1f2937;
+    padding: 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .online-indicator {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: var(--success);
+  }
+
+  .ai-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: rgba(79, 70, 229, 0.2);
+    padding: 0.25rem 0.75rem;
+    border-radius: 2rem;
+  }
+
+  .ai-indicator i {
+    color: var(--primary);
+  }
+
+  /* Features Section */
+  .features-section {
+    background-color: white;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .section-header h2 {
+    font-size: 2.5rem;
+  }
+
+  .section-header p {
+    font-size: 1.25rem;
+    color: var(--text-light);
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .feature-card {
+    background-color: white;
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    padding: 2rem;
+    transition: all 0.3s ease;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-0.5rem);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-light);
+  }
+
   .feature-icon {
-    width: 50px;
-    height: 50px;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.75rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    color: var(--primary);
+    background-color: var(--primary-light);
+    font-size: 1.25rem;
+  }
+
+  .feature-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .feature-card p {
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+  }
+
+  .feature-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--primary);
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .feature-link:hover {
+    gap: 0.75rem;
+  }
+
+  /* Tech Stack Section */
+  .tech-section {
+    background-color: var(--light);
+  }
+
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .tech-card {
+    background-color: white;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .tech-card:hover {
+    transform: translateY(-0.5rem);
+    box-shadow: var(--shadow);
+  }
+
+  .tech-card img {
+    width: 2.5rem;
+    height: 2.5rem;
+    object-fit: contain;
+  }
+
+  .tech-info h4 {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .tech-info p {
+    font-size: 0.875rem;
+    color: var(--text-light);
+  }
+
+  /* Developer Section */
+  .developer-card {
+    background-color: var(--light);
+    border-radius: 1rem;
+    overflow: hidden;
+    display: flex;
+    border: 1px solid var(--border);
+  }
+
+  .developer-image {
+    flex: 1;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(79, 70, 229, 0.05);
+  }
+
+  .developer-image img {
+    width: 10rem;
+    height: 10rem;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1.5rem;
+    border: 5px solid white;
+    box-shadow: var(--shadow);
+  }
+
+  .developer-image h3 {
+    font-size: 1.5rem;
+  }
+
+  .developer-image p {
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+  }
+
+  .social-links {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .social-links a {
+    color: var(--text-light);
+    font-size: 1.25rem;
+    transition: color 0.3s ease;
+  }
+
+  .social-links a:hover {
+    color: var(--primary);
+  }
+
+  .developer-info {
+    flex: 2;
+    padding: 3rem;
+  }
+
+  .developer-info h2 {
+    font-size: 2rem;
+  }
+
+  .intro {
+    font-size: 1.25rem;
+    color: var(--text-light);
+    margin-bottom: 2rem;
+  }
+
+  .feature-list {
+    list-style: none;
+    margin: 1.5rem 0;
+  }
+
+  .feature-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .feature-list i {
+    color: var(--primary);
+  }
+
+  /* CTA Section */
+  .cta-section {
+    background-color: var(--dark);
+    color: white;
+    text-align: center;
+  }
+
+  .cta-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .cta-section p {
+    font-size: 1.25rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+  }
+
+  /* Rotating Text Animation */
+  .txt-rotate {
+    display: inline-block;
+    position: relative;
+  }
+
+  .txt-rotate::after {
+    content: '';
+    position: absolute;
+    right: -0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2px;
+    height: 1em;
+    background: currentColor;
+    animation: blink 0.7s infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .hero-content {
+      flex-direction: column;
+      padding: 3rem 0;
+      min-height: auto;
+    }
+
+    .hero-text {
+      padding-right: 0;
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+
+    .hero-text h1 {
+      font-size: 2.5rem;
+    }
+
+    .subtitle {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-buttons, .trust-badges {
+      justify-content: center;
+    }
+
+    .editor-preview {
+      transform: none;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .section-header h2 {
+      font-size: 2rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    section {
+      padding: 3rem 0;
+    }
+
+    .developer-card {
+      flex-direction: column;
+    }
+
+    .developer-image {
+      padding: 2rem;
+    }
+
+    .developer-info {
+      padding: 2rem;
+    }
+
+    .features-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .tech-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero-text h1 {
+      font-size: 2rem;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+    }
+
+    .btn {
+      width: 100%;
+    }
+
+    .trust-badges {
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .tech-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
 
 <script>
-  // Simple animation for the editor preview to make it feel alive
+  // Rotating Text Animation
   document.addEventListener('DOMContentLoaded', function() {
-    const editorLines = document.querySelectorAll('.document-content p');
-    let delay = 0;
-    
-    editorLines.forEach((line, index) => {
-      if (index > 0) {
-        line.style.opacity = '0';
-        line.style.transform = 'translateY(10px)';
-        line.style.transition = `all 0.3s ease ${delay}s`;
-        setTimeout(() => {
-          line.style.opacity = '1';
-          line.style.transform = 'translateY(0)';
-        }, 100 + (index * 200));
-        delay += 0.2;
+    class TxtRotate {
+      constructor(el, toRotate, period) {
+        this.toRotate = toRotate;
+        this.el = el;
+        this.loopNum = 0;
+        this.period = parseInt(period, 10) || 2000;
+        this.txt = '';
+        this.tick();
+        this.isDeleting = false;
       }
+      
+      tick() {
+        const i = this.loopNum % this.toRotate.length;
+        const fullTxt = this.toRotate[i];
+        
+        if (this.isDeleting) {
+          this.txt = fullTxt.substring(0, this.txt.length - 1);
+        } else {
+          this.txt = fullTxt.substring(0, this.txt.length + 1);
+        }
+        
+        this.el.innerHTML = '<span class="wrap">'+this.txt+'</span>';
+        
+        let delta = 200 - Math.random() * 100;
+        
+        if (this.isDeleting) { delta /= 2; }
+        
+        if (!this.isDeleting && this.txt === fullTxt) {
+          delta = this.period;
+          this.isDeleting = true;
+        } else if (this.isDeleting && this.txt === '') {
+          this.isDeleting = false;
+          this.loopNum++;
+          delta = 500;
+        }
+        
+        setTimeout(() => this.tick(), delta);
+      }
+    }
+    
+    const elements = document.getElementsByClassName('txt-rotate');
+    for (let i=0; i<elements.length; i++) {
+      const toRotate = elements[i].getAttribute('data-rotate');
+      const period = elements[i].getAttribute('data-period');
+      if (toRotate) {
+        new TxtRotate(elements[i], JSON.parse(toRotate), period);
+      }
+    }
+    
+    // Animate elements on scroll
+    const animateOnScroll = () => {
+      const elements = document.querySelectorAll('.feature-card, .tech-card');
+      
+      elements.forEach(element => {
+        const elementPosition = element.getBoundingClientRect().top;
+        const screenPosition = window.innerHeight / 1.2;
+        
+        if (elementPosition < screenPosition) {
+          element.style.opacity = '1';
+          element.style.transform = 'translateY(0)';
+        }
+      });
+    };
+    
+    // Set initial state for animation
+    document.querySelectorAll('.feature-card, .tech-card').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'all 0.5s ease';
     });
+    
+    window.addEventListener('scroll', animateOnScroll);
+    animateOnScroll(); // Run once on load
   });
 </script>
 {% endblock %}

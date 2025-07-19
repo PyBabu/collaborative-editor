@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Document
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def editor_view(request, doc_id):
     document = get_object_or_404(Document, id=doc_id)
     return render(request, 'editor/editor.html', {'document': document})
@@ -11,16 +13,19 @@ from django.shortcuts import render
 
 @login_required
 def document_list(request):
-    docs = Document.objects.filter(owner=request.user)
+    docs = Document.objects.all()
     return render(request, 'editor/list.html', {'documents': docs})
 
 
 from django.http import JsonResponse
 from .utils import check_grammar
-from django.views.decorators.csrf import csrf_exempt
+# from django.views.decorators.csrf import csrf_exempt
 import json
 
-@csrf_exempt
+from django.views.decorators.csrf import csrf_protect
+
+@csrf_protect
+@login_required
 def grammar_check_view(request):
     if request.method == "POST":
         data = json.loads(request.body)

@@ -1,7 +1,7 @@
 {% extends 'users/base.html' %}
-
 {% block content %}
 <div class="editor-container">
+  <!-- Header -->
   <div class="editor-header bg-light p-3 border-bottom">
     <div class="d-flex justify-content-between align-items-center">
       <h2 class="mb-0">
@@ -19,23 +19,24 @@
     </div>
   </div>
 
+  <!-- Toolbar -->
   <div class="editor-toolbar bg-light p-2 border-bottom">
     <div class="btn-group me-2">
-      <button class="btn btn-sm btn-outline-secondary">
+      <button class="btn btn-sm btn-outline-secondary" data-command="bold">
         <i class="fas fa-bold"></i>
       </button>
-      <button class="btn btn-sm btn-outline-secondary">
+      <button class="btn btn-sm btn-outline-secondary" data-command="italic">
         <i class="fas fa-italic"></i>
       </button>
-      <button class="btn btn-sm btn-outline-secondary">
+      <button class="btn btn-sm btn-outline-secondary" data-command="underline">
         <i class="fas fa-underline"></i>
       </button>
     </div>
     <div class="btn-group me-2">
-      <button class="btn btn-sm btn-outline-secondary">
+      <button class="btn btn-sm btn-outline-secondary" data-command="insertUnorderedList">
         <i class="fas fa-list-ul"></i>
       </button>
-      <button class="btn btn-sm btn-outline-secondary">
+      <button class="btn btn-sm btn-outline-secondary" data-command="insertOrderedList">
         <i class="fas fa-list-ol"></i>
       </button>
     </div>
@@ -44,9 +45,9 @@
     </button>
   </div>
 
+  <!-- Body -->
   <div class="editor-body">
     <div id="editor" class="editor-content" contenteditable="true">{{ document.content|safe }}</div>
-    
     <div class="editor-sidebar">
       <div class="sidebar-header p-3">
         <h5><i class="fas fa-lightbulb me-2"></i>Suggestions</h5>
@@ -55,6 +56,7 @@
     </div>
   </div>
 
+  <!-- Footer -->
   <div class="editor-footer bg-light p-2 border-top">
     <div class="d-flex justify-content-between align-items-center">
       <div class="online-users">
@@ -65,7 +67,7 @@
       </div>
       <div>
         <span class="text-muted me-3">Last saved: <span id="last-saved">Just now</span></span>
-        <button class="btn btn-sm btn-success">
+        <button id="saveBtn" class="btn btn-sm btn-success">
           <i class="fas fa-save me-1"></i> Save
         </button>
       </div>
@@ -187,8 +189,9 @@
   }
 </style>
 
+
+
 <script>
-  // WebSocket setup
   const docId = "{{ document.id }}";
   const socket = new WebSocket(`ws://${window.location.host}/ws/editor/${docId}/`);
   const editor = document.getElementById('editor');
@@ -198,73 +201,65 @@
   const userAvatars = document.getElementById('user-avatars');
   const lastSavedElement = document.getElementById('last-saved');
 
-  // Track cursor position
   let lastCursorPosition = 0;
 
-  // Send content updates
+  // WebSocket events
   editor.addEventListener('input', () => {
-    const cursorPos = getCursorPosition(editor);
-    lastCursorPosition = cursorPos;
-    
+    lastCursorPosition = getCursorPosition(editor);
     socket.send(JSON.stringify({
       'type': 'content_update',
       'content': editor.innerHTML,
-      'cursor_position': cursorPos
+      'cursor_position': lastCursorPosition
     }));
-    
     updateLastSaved();
   });
 
-  // Send title updates
   titleElement.addEventListener('input', () => {
     socket.send(JSON.stringify({
       'type': 'title_update',
       'title': titleElement.textContent
     }));
-    
     updateLastSaved();
   });
 
-  // Receive updates
   socket.onmessage = function(e) {
     const data = JSON.parse(e.data);
-    
-    if (data.type === 'content_update') {
-      // Only update if the content is different
-      if (data.content !== editor.innerHTML) {
-        editor.innerHTML = data.content;
-        setCursorPosition(editor, lastCursorPosition);
-      }
-    }
-    else if (data.type === 'title_update') {
+    if (data.type === 'content_update' && data.content !== editor.innerHTML) {
+      editor.innerHTML = data.content;
+      setCursorPosition(editor, lastCursorPosition);
+    } else if (data.type === 'title_update') {
       titleElement.textContent = data.title;
-    }
-    else if (data.type === 'user_update') {
+    } else if (data.type === 'user_update') {
       userCountElement.textContent = data.count;
       updateUserAvatars(data.users);
-    }
-    else if (data.type === 'connection_update') {
+    } else if (data.type === 'connection_update') {
       connectionStatus.textContent = data.status;
       connectionStatus.parentElement.className = `badge bg-${data.status === 'Connected' ? 'success' : 'danger'}`;
     }
   };
 
-  // Connection status
-  socket.onopen = function() {
+  socket.onopen = () => {
     connectionStatus.textContent = 'Connected';
     connectionStatus.parentElement.className = 'badge bg-success';
   };
 
-  socket.onclose = function() {
+  socket.onclose = () => {
     connectionStatus.textContent = 'Disconnected';
     connectionStatus.parentElement.className = 'badge bg-danger';
   };
 
-  // Grammar check request
+  // Toolbar Commands
+  document.querySelectorAll('.editor-toolbar .btn-outline-secondary').forEach(button => {
+    button.addEventListener('click', () => {
+      const command = button.getAttribute('data-command');
+      document.execCommand(command, false, null);
+    });
+  });
+
+  // Grammar Check
   document.getElementById("grammarBtn").addEventListener("click", () => {
     const suggestionsList = document.getElementById("grammarSuggestions");
     suggestionsList.innerHTML = '<div class="text-center py-3"><i class="fas fa-spinner fa-spin"></i> Analyzing...</div>';
-    
     fetch("{% url 'grammar_check' %}", {
       method: "POST",
       headers: {
@@ -276,69 +271,55 @@
     .then(response => response.json())
     .then(data => {
       suggestionsList.innerHTML = '';
-      
       if (data.matches && data.matches.length > 0) {
         data.matches.forEach(match => {
           const suggestion = document.createElement('div');
           suggestion.className = 'suggestion-item';
           suggestion.innerHTML = `
-            <p class="mb-1"><strong>${match.message}</strong></p>
-            <p class="small mb-1">${match.context.text}</p>
+            <p><strong>${match.message}</strong></p>
+            <p class="small">${match.context.text}</p>
             ${match.replacements.length > 0 ? 
-              `<p class="small">Suggestion: <span class="fw-bold">${match.replacements[0].value}</span></p>` : ''}
-            <button class="btn btn-sm btn-outline-primary btn-apply" data-offset="${match.offset}" 
-                    data-length="${match.length}" data-replacement="${match.replacements[0]?.value || ''}">
-              <i class="fas fa-check me-1"></i> Apply
-            </button>
-          `;
+              `<p class="small">Suggestion: <strong>${match.replacements[0].value}</strong></p>` : ''}
+            <button class="btn btn-sm btn-outline-primary btn-apply"
+              data-offset="${match.offset}" data-length="${match.length}"
+              data-replacement="${match.replacements[0]?.value || ''}">
+              Apply
+            </button>`;
           suggestionsList.appendChild(suggestion);
         });
       } else {
-        const suggestion = document.createElement('div');
-        suggestion.className = 'suggestion-item correct';
-        suggestion.innerHTML = `
-          <p class="mb-0"><i class="fas fa-check-circle text-success me-2"></i>No issues found!</p>
-        `;
-        suggestionsList.appendChild(suggestion);
+        suggestionsList.innerHTML = '<div class="suggestion-item correct">No issues found!</div>';
       }
     });
   });
 
-  // Apply suggestion
+  // Apply grammar suggestion
   document.addEventListener('click', function(e) {
-    if (e.target.classList.contains('btn-apply') {
-      const btn = e.target.closest('.btn-apply');
+    if (e.target.classList.contains('btn-apply')) {
+      const btn = e.target;
       const offset = parseInt(btn.dataset.offset);
       const length = parseInt(btn.dataset.length);
       const replacement = btn.dataset.replacement;
-      
-      if (editor.textContent.length >= offset + length) {
-        const text = editor.textContent;
-        const newText = text.substring(0, offset) + replacement + text.substring(offset + length);
-        editor.textContent = newText;
-        
-        // Highlight the applied change temporarily
-        const range = document.createRange();
-        const sel = window.getSelection();
-        range.setStart(editor.firstChild, offset);
-        range.setEnd(editor.firstChild, offset + replacement.length);
-        sel.removeAllRanges();
-        sel.addRange(range);
-        
-        // Send update
-        socket.send(JSON.stringify({
-          'type': 'content_update',
-          'content': editor.innerHTML
-        }));
-      }
+      const text = editor.textContent;
+      const newText = text.substring(0, offset) + replacement + text.substring(offset + length);
+      editor.textContent = newText;
     }
   });
 
-  // Helper functions
+  // Save button handler (mock)
+  document.getElementById("saveBtn").addEventListener("click", () => {
+    alert("Document saved (mock). You can implement actual save logic.");
+    updateLastSaved();
+  });
+
+  function updateLastSaved() {
+    const now = new Date();
+    lastSavedElement.textContent = now.toLocaleTimeString();
+  }
+
   function getCursorPosition(element) {
     const selection = window.getSelection();
     if (selection.rangeCount === 0) return 0;
-    
     const range = selection.getRangeAt(0);
     const preCaretRange = range.cloneRange();
     preCaretRange.selectNodeContents(element);
@@ -349,8 +330,6 @@
   function setCursorPosition(element, offset) {
     const selection = window.getSelection();
     const range = document.createRange();
-    
-    // Find the text node and position
     let pos = 0;
     const textNodes = getTextNodes(element);
     for (const node of textNodes) {
@@ -366,39 +345,23 @@
   }
 
   function getTextNodes(element) {
-    const walker = document.createTreeWalker(
-      element,
-      NodeFilter.SHOW_TEXT,
-      null,
-      false
-    );
-    
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
     const textNodes = [];
     let node;
-    while (node = walker.nextNode()) {
-      textNodes.push(node);
-    }
-    
+    while (node = walker.nextNode()) textNodes.push(node);
     return textNodes;
   }
 
   function updateUserAvatars(users) {
     userAvatars.innerHTML = '';
-    users.slice(0, 5).forEach(user => {
-      const avatar = document.createElement('span');
-      avatar.className = 'avatar-sm';
-      avatar.style.backgroundColor = stringToColor(user.username);
-      avatar.textContent = user.username[0].toUpperCase();
-      avatar.title = user.username;
-      userAvatars.appendChild(avatar);
+    users.forEach(user => {
+      const span = document.createElement('span');
+      span.className = 'avatar-sm';
+      span.style.backgroundColor = stringToColor(user.username);
+      span.textContent = user.username[0].toUpperCase();
+      span.title = user.username;
+      userAvatars.appendChild(span);
     });
-    
-    if (users.length > 5) {
-      const more = document.createElement('span');
-      more.className = 'avatar-sm bg-secondary';
-      more.textContent = `+${users.length - 5}`;
-      userAvatars.appendChild(more);
-    }
   }
 
   function stringToColor(str) {
@@ -406,17 +369,9 @@
     for (let i = 0; i < str.length; i++) {
       hash = str.charCodeAt(i) + ((hash << 5) - hash);
     }
-    
-    const color = `hsl(${hash % 360}, 70%, 60%)`;
-    return color;
+    return `hsl(${hash % 360}, 70%, 60%)`;
   }
 
-  function updateLastSaved() {
-    const now = new Date();
-    lastSavedElement.textContent = now.toLocaleTimeString();
-  }
-
-  // Initialize
   updateLastSaved();
 </script>
 {% endblock %}

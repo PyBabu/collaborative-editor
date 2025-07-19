@@ -1,182 +1,613 @@
 {% extends 'users/base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-lg-6 col-md-8">
-    <div class="card border-0 shadow-lg mt-5">
-      <div class="card-header bg-gradient-primary text-white">
-        <h3 class="text-center mb-0">Create Your Account</h3>
-      </div>
-      <div class="card-body p-5">
-        <form method="post" class="needs-validation" novalidate>
-          {% csrf_token %}
-          
-          {% if form.errors %}
-            <div class="alert alert-danger alert-dismissible fade show">
-              <strong>Oops!</strong> Please correct the errors below.
-              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-          {% endif %}
-          
-          <div class="mb-4">
-            <label for="id_username" class="form-label">Username</label>
-            <input type="text" name="username" id="id_username" class="form-control form-control-lg {% if form.username.errors %}is-invalid{% endif %}" 
-                   placeholder="Enter username" required>
-            {% if form.username.errors %}
-              <div class="invalid-feedback">
-                {{ form.username.errors.0 }}
-              </div>
-            {% endif %}
-          </div>
-          
-          <div class="mb-4">
-            <label for="id_email" class="form-label">Email Address</label>
-            <input type="email" name="email" id="id_email" class="form-control form-control-lg {% if form.email.errors %}is-invalid{% endif %}" 
-                   placeholder="your@email.com" required>
-            {% if form.email.errors %}
-              <div class="invalid-feedback">
-                {{ form.email.errors.0 }}
-              </div>
-            {% endif %}
-          </div>
-          
-          <div class="mb-4">
-            <label for="id_password1" class="form-label">Password</label>
-            <div class="input-group">
-              <input type="password" name="password1" id="id_password1" class="form-control form-control-lg {% if form.password1.errors %}is-invalid{% endif %}" 
-                     placeholder="Create password" required>
-              <button class="btn btn-outline-secondary toggle-password" type="button">
-                <i class="fas fa-eye"></i>
-              </button>
-              {% if form.password1.errors %}
-                <div class="invalid-feedback">
-                  {{ form.password1.errors.0 }}
-                </div>
-              {% endif %}
-            </div>
-            <div class="form-text">Must be at least 8 characters</div>
-          </div>
-          
-          <div class="mb-4">
-            <label for="id_password2" class="form-label">Confirm Password</label>
-            <div class="input-group">
-              <input type="password" name="password2" id="id_password2" class="form-control form-control-lg {% if form.password2.errors %}is-invalid{% endif %}" 
-                     placeholder="Repeat password" required>
-              <button class="btn btn-outline-secondary toggle-password" type="button">
-                <i class="fas fa-eye"></i>
-              </button>
-              {% if form.password2.errors %}
-                <div class="invalid-feedback">
-                  {{ form.password2.errors.0 }}
-                </div>
-              {% endif %}
-            </div>
-          </div>
-          
-          <div class="d-grid mb-4">
-            <button type="submit" class="btn btn-primary btn-lg shadow-sm">
-              <i class="fas fa-user-plus me-2"></i> Create Account
-            </button>
-          </div>
-          
-          <div class="text-center mb-4">
-            <p class="text-muted">Already have an account? <a href="{% url 'login' %}" class="text-decoration-none">Sign in</a></p>
-          </div>
-        </form>
-        
-        <div class="divider d-flex align-items-center my-4">
-          <p class="text-center fw-bold mx-3 mb-0 text-muted">OR</p>
+<div class="signup-container">
+  <!-- Left Panel - Branding -->
+  <div class="signup-left">
+    <div class="brand-header">
+      <h1>Join Our Community</h1>
+      <p class="brand-subheader">Start collaborating in real-time with your team</p>
+    </div>
+    
+    <img src="{% static 'images/signup.svg' %}" alt="Team collaboration illustration" class="signup-illustration">
+    
+    <div class="feature-list">
+      <div class="feature-card">
+        <div class="feature-icon-bg">
+          <i class="fas fa-users"></i>
         </div>
-        
-        <div class="social-auth text-center">
-          <p class="mb-3">Register with social account</p>
-          <div class="d-flex justify-content-center gap-3">
-            <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-outline-danger rounded-circle social-btn">
-              <i class="fab fa-google"></i>
-            </a>
-            <a href="{% url 'social:begin' 'github' %}" class="btn btn-outline-dark rounded-circle social-btn">
-              <i class="fab fa-github"></i>
-            </a>
-            <a href="{% url 'social:begin' 'facebook' %}" class="btn btn-outline-primary rounded-circle social-btn">
-              <i class="fab fa-facebook-f"></i>
-            </a>
-            <a href="{% url 'social:begin' 'twitter' %}" class="btn btn-outline-info rounded-circle social-btn">
-              <i class="fab fa-twitter"></i>
-            </a>
-          </div>
+        <div class="feature-content">
+          <h3>Real-time Collaboration</h3>
+          <p>Work simultaneously with team members</p>
+        </div>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon-bg">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <div class="feature-content">
+          <h3>Enterprise Security</h3>
+          <p>End-to-end encrypted data protection</p>
         </div>
       </div>
     </div>
   </div>
+  
+  <!-- Right Panel - Form -->
+  <div class="signup-right">
+    <div class="signup-form-container">
+      <div class="form-header">
+        <h2>Create Your Account</h2>
+        <p class="form-subheader">Get started with your free account</p>
+      </div>
+      
+      <form method="post" class="signup-form">
+        {% csrf_token %}
+        
+        {% if form.errors %}
+        <div class="form-error-message">
+          <i class="fas fa-exclamation-circle"></i>
+          <span>Please correct the errors below</span>
+        </div>
+        {% endif %}
+        
+        <!-- Form Fields -->
+        <div class="form-field-group">
+          <div class="input-container">
+            <i class="input-icon fas fa-user"></i>
+            {{ form.username }}
+            <label class="floating-label">Username</label>
+          </div>
+          {% for error in form.username.errors %}
+          <div class="error-message">{{ error }}</div>
+          {% endfor %}
+        </div>
+        
+        <div class="form-field-group">
+          <div class="input-container">
+            <i class="input-icon fas fa-signature"></i>
+            {{ form.first_name }}
+            <label class="floating-label">First Name</label>
+          </div>
+          {% for error in form.first_name.errors %}
+          <div class="error-message">{{ error }}</div>
+          {% endfor %}
+        </div>
+        
+        <div class="form-field-group">
+          <div class="input-container">
+            <i class="input-icon fas fa-signature"></i>
+            {{ form.last_name }}
+            <label class="floating-label">Last Name</label>
+          </div>
+          {% for error in form.last_name.errors %}
+          <div class="error-message">{{ error }}</div>
+          {% endfor %}
+        </div>
+        
+        <div class="form-field-group">
+          <div class="input-container">
+            <i class="input-icon fas fa-envelope"></i>
+            {{ form.email }}
+            <label class="floating-label">Email Address</label>
+          </div>
+          {% for error in form.email.errors %}
+          <div class="error-message">{{ error }}</div>
+          {% endfor %}
+        </div>
+        
+        <div class="form-field-group">
+          <div class="input-container">
+            <i class="input-icon fas fa-lock"></i>
+            {{ form.password1 }}
+            <label class="floating-label">Password</label>
+            <i class="password-toggle fas fa-eye"></i>
+          </div>
+          {% for error in form.password1.errors %}
+          <div class="error-message">{{ error }}</div>
+          {% endfor %}
+        </div>
+        
+        <div class="form-field-group">
+          <div class="input-container">
+            <i class="input-icon fas fa-lock"></i>
+            {{ form.password2 }}
+            <label class="floating-label">Confirm Password</label>
+            <i class="password-toggle fas fa-eye"></i>
+          </div>
+          {% for error in form.password2.errors %}
+          <div class="error-message">{{ error }}</div>
+          {% endfor %}
+        </div>
+        
+        <button type="submit" class="submit-button">
+          <i class="fas fa-user-plus"></i>
+          <span>Create Account</span>
+        </button>
+        
+        <div class="social-divider">
+          <span>or continue with</span>
+        </div>
+        
+        <div class="social-buttons">
+          <a href="{% url 'social:begin' 'google-oauth2' %}" class="social-button google">
+            <img src="{% static 'images/google.svg' %}" alt="Google logo">
+            <span>Google</span>
+          </a>
+          <a href="{% url 'social:begin' 'github' %}" class="social-button github">
+            <i class="fab fa-github"></i>
+            <span>GitHub</span>
+          </a>
+        </div>
+        
+        <div class="login-redirect">
+          Already have an account? <a href="{% url 'login' %}">Sign in</a>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
+<!-- CSS Styles -->
 <style>
-  .bg-gradient-primary {
-    background: linear-gradient(135deg, #4361ee, #3a0ca3);
+  :root {
+    /* Color Palette */
+    --primary: #4F46E5;
+    --primary-dark: #4338CA;
+    --primary-light: #EEF2FF;
+    --error: #EF4444;
+    --success: #10B981;
+    --warning: #F59E0B;
+    --light: #F9FAFB;
+    --gray-light: #E5E7EB;
+    --gray: #9CA3AF;
+    --gray-dark: #6B7280;
+    --dark: #111827;
+    
+    /* Spacing */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    
+    /* Typography */
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 1.875rem;
+    
+    /* Borders */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-full: 9999px;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    
+    /* Transitions */
+    --transition: all 0.2s ease;
   }
-  
-  .card {
-    border-radius: 15px;
-    overflow: hidden;
+
+  /* Base Styles */
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.5;
+    color: var(--dark);
+    background-color: var(--light);
+    margin: 0;
   }
-  
-  .card-header {
-    padding: 1.5rem;
+
+  /* Layout Container */
+  .signup-container {
+    display: flex;
+    min-height: 100vh;
   }
-  
-  .social-btn {
-    width: 50px;
-    height: 50px;
+
+  /* Left Panel */
+  .signup-left {
+    flex: 1;
+    padding: var(--space-xl);
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .brand-header h1 {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    margin-bottom: var(--space-sm);
+  }
+
+  .brand-subheader {
+    font-size: var(--text-lg);
+    opacity: 0.9;
+    margin-bottom: var(--space-xl);
+  }
+
+  .signup-illustration {
+    max-width: 320px;
+    width: 100%;
+    margin: var(--space-xl) 0;
+    filter: drop-shadow(var(--shadow-md));
+  }
+
+  .feature-list {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .feature-card {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+    margin: var(--space-lg) 0;
+    padding: var(--space-md);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    transition: var(--transition);
+    text-align: left;
+  }
+
+  .feature-card:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+  }
+
+  .feature-icon-bg {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-full);
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
+    flex-shrink: 0;
   }
-  
-  .social-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  .feature-content h3 {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
   }
-  
-  .divider {
-    color: #6c757d;
+
+  .feature-content p {
+    font-size: var(--text-sm);
+    opacity: 0.8;
+    margin: 0;
   }
-  
-  .divider::before,
-  .divider::after {
-    content: "";
+
+  /* Right Panel */
+  .signup-right {
     flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-xl);
+  }
+
+  .signup-form-container {
+    max-width: 450px;
+    width: 100%;
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    box-shadow: var(--shadow-md);
+  }
+
+  .form-header h2 {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    margin-bottom: var(--space-sm);
+    text-align: center;
+  }
+
+  .form-subheader {
+    color: var(--gray-dark);
+    text-align: center;
+    margin-bottom: var(--space-xl);
+  }
+
+  /* Form Elements */
+  .form-error-message {
+    color: var(--error);
+    background: rgba(239, 68, 68, 0.1);
+    padding: var(--space-md);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: var(--text-sm);
+  }
+
+  .form-field-group {
+    margin-bottom: var(--space-lg);
+  }
+
+  .input-container {
+    position: relative;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray);
+    z-index: 2;
+  }
+
+  .form-field-group input {
+    width: 100%;
+    padding: 1.75rem 1rem 0.75rem 3rem;
+    border: 1px solid var(--gray-light);
+    border-radius: var(--radius-md);
+    font-size: var(--text-base);
+    transition: var(--transition);
+    background-color: white;
+    height: 56px;
+    box-sizing: border-box;
+  }
+
+  .form-field-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
+  }
+
+  .floating-label {
+    position: absolute;
+    left: 3rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray);
+    font-size: var(--text-base);
+    font-weight: 400;
+    pointer-events: none;
+    transition: var(--transition);
+    z-index: 1;
+  }
+
+  .form-field-group input:focus + .floating-label,
+  .form-field-group input:not(:placeholder-shown) + .floating-label {
+    transform: translateY(-1rem) scale(0.85);
+    top: 1.25rem;
+    left: 3rem;
+    color: var(--primary);
+    background: white;
+    padding: 0 var(--space-xs);
+  }
+
+  .password-toggle {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray);
+    cursor: pointer;
+    z-index: 2;
+  }
+
+  .error-message {
+    color: var(--error);
+    font-size: var(--text-sm);
+    margin-top: var(--space-xs);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  /* Submit Button */
+  .submit-button {
+    width: 100%;
+    padding: var(--space-md);
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: var(--text-base);
+    font-weight: 600;
+    margin: var(--space-xl) 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    transition: var(--transition);
+  }
+
+  .submit-button:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+
+  /* Social Divider */
+  .social-divider {
+    text-align: center;
+    margin: var(--space-xl) 0;
+    position: relative;
+    color: var(--gray);
+    font-size: var(--text-sm);
+  }
+
+  .social-divider::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
     height: 1px;
-    background: #dee2e6;
+    background: var(--gray-light);
+    z-index: -1;
   }
-  
-  .toggle-password {
-    border-top-right-radius: 0.375rem !important;
-    border-bottom-right-radius: 0.375rem !important;
+
+  .social-divider span {
+    background: white;
+    padding: 0 var(--space-md);
   }
-  
-  @media (max-width: 576px) {
-    .card-body {
-      padding: 2rem;
+
+  /* Social Buttons */
+  .social-buttons {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+  }
+
+  .social-button {
+    flex: 1;
+    padding: var(--space-sm);
+    border: 1px solid var(--gray-light);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    transition: var(--transition);
+    text-decoration: none;
+  }
+
+  .social-button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .social-button.google {
+    background: white;
+    color: var(--dark);
+  }
+
+  .social-button.google:hover {
+    background: var(--light);
+  }
+
+  .social-button.github {
+    background: var(--dark);
+    color: white;
+    border-color: var(--dark);
+  }
+
+  .social-button.github:hover {
+    background: #1F2937;
+  }
+
+  /* Login Redirect */
+  .login-redirect {
+    text-align: center;
+    color: var(--gray-dark);
+    font-size: var(--text-sm);
+  }
+
+  .login-redirect a {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition);
+  }
+
+  .login-redirect a:hover {
+    text-decoration: underline;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .signup-container {
+      flex-direction: column;
+    }
+    
+    .signup-left {
+      padding: var(--space-lg);
+    }
+    
+    .signup-right {
+      padding: var(--space-lg);
+    }
+    
+    .signup-illustration {
+      max-width: 280px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .signup-form-container {
+      padding: var(--space-lg);
+    }
+    
+    .social-buttons {
+      flex-direction: column;
+    }
+    
+    .feature-card {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    
+    .feature-content {
+      margin-top: var(--space-sm);
+      text-align: center;
     }
   }
 </style>
 
+<!-- JavaScript -->
 <script>
-  // Toggle password visibility
-  document.querySelectorAll('.toggle-password').forEach(function(button) {
-    button.addEventListener('click', function() {
-      const input = this.previousElementSibling;
-      const icon = this.querySelector('i');
-      if (input.type === 'password') {
-        input.type = 'text';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
-      } else {
-        input.type = 'password';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize floating labels
+    document.querySelectorAll('.form-field-group input').forEach(input => {
+      // Ensure placeholder exists for floating effect
+      if (!input.hasAttribute('placeholder')) {
+        input.setAttribute('placeholder', ' ');
       }
+      
+      // Handle prefilled values (if any)
+      if (input.value) {
+        input.dispatchEvent(new Event('input'));
+      }
+    });
+    
+    // Password toggle functionality
+    document.querySelectorAll('.password-toggle').forEach(toggle => {
+      toggle.addEventListener('click', function() {
+        const input = this.closest('.input-container').querySelector('input');
+        if (input.type === 'password') {
+          input.type = 'text';
+          this.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+          input.type = 'password';
+          this.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+      });
+    });
+    
+    // Input focus effects
+    document.querySelectorAll('.input-container').forEach(container => {
+      const input = container.querySelector('input');
+      const icon = container.querySelector('.input-icon');
+      
+      input.addEventListener('focus', function() {
+        icon.style.color = var(--primary);
+      });
+      
+      input.addEventListener('blur', function() {
+        if (!this.value) {
+          icon.style.color = var(--gray);
+        }
+      });
     });
   });
 </script>
