@@ -1,6 +1,309 @@
-<!-- templates/users/dashboard.html -->
 {% extends 'users/base.html' %}
+
 {% block content %}
-<h2>Welcome {{ user.username }} 👋</h2>
-<p>This is your dashboard. You can start editing documents here.</p>
+<div class="dashboard-container">
+  <!-- Welcome Header -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <div class="welcome-card p-4 rounded-4 shadow-sm">
+        <div class="d-flex align-items-center">
+          {% if user.profile.avatar %}
+            <img src="{{ user.profile.avatar.url }}" alt="Avatar" class="dashboard-avatar me-4">
+          {% else %}
+            <div class="dashboard-avatar-initials me-4">
+              {{ user.username|first|upper }}
+            </div>
+          {% endif %}
+          <div>
+            <h1 class="mb-2">Welcome back, <span class="text-gradient">{{ user.username }}</span>! 👋</h1>
+            <p class="lead text-muted mb-0">Ready to collaborate on some amazing documents?</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <h3 class="mb-3"><i class="fas fa-bolt me-2"></i>Quick Actions</h3>
+      <div class="d-flex flex-wrap gap-3">
+        <a href="{% url 'create_document' %}" class="quick-action-card btn btn-primary-custom p-3 rounded-3 shadow-sm">
+          <div class="d-flex align-items-center">
+            <div class="quick-action-icon bg-white text-primary rounded-circle me-3">
+              <i class="fas fa-plus"></i>
+            </div>
+            <div>
+              <h5 class="mb-0">New Document</h5>
+              <small class="text-white-50">Start from scratch</small>
+            </div>
+          </div>
+        </a>
+        
+        <a href="#" class="quick-action-card btn btn-outline-primary p-3 rounded-3 shadow-sm">
+          <div class="d-flex align-items-center">
+            <div class="quick-action-icon bg-primary text-white rounded-circle me-3">
+              <i class="fas fa-upload"></i>
+            </div>
+            <div>
+              <h5 class="mb-0">Upload File</h5>
+              <small class="text-muted">Import existing document</small>
+            </div>
+          </div>
+        </a>
+        
+        <a href="{% url 'document_list' %}" class="quick-action-card btn btn-outline-primary p-3 rounded-3 shadow-sm">
+          <div class="d-flex align-items-center">
+            <div class="quick-action-icon bg-primary text-white rounded-circle me-3">
+              <i class="fas fa-folder-open"></i>
+            </div>
+            <div>
+              <h5 class="mb-0">My Documents</h5>
+              <small class="text-muted">View all your files</small>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Documents -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-0">
+          <h3 class="mb-0"><i class="fas fa-clock-rotate-left me-2"></i>Recent Documents</h3>
+        </div>
+        <div class="card-body">
+          {% if recent_documents %}
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead>
+                  <tr>
+                    <th>Document</th>
+                    <th>Last Modified</th>
+                    <th>Collaborators</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for doc in recent_documents %}
+                    <tr>
+                      <td>
+                        <a href="{% url 'document-edit' doc.id %}" class="text-decoration-none">
+                          <i class="fas fa-file-alt me-2 text-primary"></i>
+                          <strong>{{ doc.title|truncatechars:30 }}</strong>
+                        </a>
+                      </td>
+                      <td>
+                        <small class="text-muted">{{ doc.updated_at|timesince }} ago</small>
+                      </td>
+                      <td>
+                        <div class="avatar-group">
+                          {% for user in doc.shared_with.all|slice:":3" %}
+                            <span class="avatar-sm" data-bs-toggle="tooltip" title="{{ user.username }}">
+                              {{ user.username|first|upper }}
+                            </span>
+                          {% endfor %}
+                          {% if doc.shared_with.count > 3 %}
+                            <span class="avatar-sm bg-light text-dark">
+                              +{{ doc.shared_with.count|add:"-3" }}
+                            </span>
+                          {% endif %}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="dropdown">
+                          <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-ellipsis-h"></i>
+                          </button>
+                          <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'document-edit' doc.id %}"><i class="fas fa-edit me-2"></i>Edit</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-share-alt me-2"></i>Share</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#"><i class="fas fa-trash-alt me-2"></i>Delete</a></li>
+                          </ul>
+                        </div>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <div class="text-center py-5">
+              <i class="fas fa-file-alt fa-4x text-muted mb-3"></i>
+              <h5>No recent documents</h5>
+              <p class="text-muted">Create your first document to get started</p>
+              <a href="{% url 'create_document' %}" class="btn btn-primary-custom">
+                <i class="fas fa-plus me-2"></i>Create Document
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics -->
+  <div class="row">
+    <div class="col-md-4 mb-4">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="stat-icon bg-primary bg-opacity-10 text-primary rounded-3 me-3">
+              <i class="fas fa-file-alt"></i>
+            </div>
+            <div>
+              <h6 class="mb-1">Total Documents</h6>
+              <h3 class="mb-0">{{ document_count }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="stat-icon bg-success bg-opacity-10 text-success rounded-3 me-3">
+              <i class="fas fa-users"></i>
+            </div>
+            <div>
+              <h6 class="mb-1">Collaborators</h6>
+              <h3 class="mb-0">{{ collaborator_count }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="stat-icon bg-info bg-opacity-10 text-info rounded-3 me-3">
+              <i class="fas fa-clock-rotate-left"></i>
+            </div>
+            <div>
+              <h6 class="mb-1">Active Sessions</h6>
+              <h3 class="mb-0">{{ active_sessions }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Dashboard Specific Styles */
+  .dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .welcome-card {
+    background: linear-gradient(135deg, #4361ee, #3a0ca3);
+    color: white;
+  }
+  
+  .text-gradient {
+    background: linear-gradient(90deg, #f72585, #7209b7);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+  }
+  
+  .dashboard-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .dashboard-avatar-initials {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: white;
+    color: #4361ee;
+    font-size: 2.5rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .quick-action-card {
+    flex: 1;
+    min-width: 250px;
+    transition: all 0.2s ease;
+    text-align: left;
+  }
+  
+  .quick-action-card:hover {
+    transform: translateY(-3px);
+  }
+  
+  .quick-action-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+  }
+  
+  .avatar-group {
+    display: flex;
+  }
+  
+  .avatar-sm {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #4361ee;
+    color: white;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: -10px;
+    border: 2px solid white;
+  }
+  
+  .stat-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+  }
+  
+  @media (max-width: 768px) {
+    .dashboard-avatar, .dashboard-avatar-initials {
+      width: 60px;
+      height: 60px;
+      font-size: 2rem;
+    }
+    
+    h1 {
+      font-size: 1.8rem;
+    }
+  }
+</style>
+
+<script>
+  // Initialize tooltips
+  document.addEventListener('DOMContentLoaded', function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  });
+</script>
 {% endblock %}

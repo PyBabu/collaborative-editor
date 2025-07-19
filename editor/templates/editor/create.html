@@ -1,12 +1,214 @@
 {% extends 'users/base.html' %}
+
 {% block content %}
-<h2>Create New Document</h2>
-<form method="post">
-  {% csrf_token %}
-  <div class="mb-3">
-    <label for="title" class="form-label">Document Title</label>
-    <input type="text" class="form-control" id="title" name="title" placeholder="Enter a title" required>
+<div class="document-creation-container">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-lg">
+        <div class="card-header bg-gradient-primary text-white py-3">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-file-alt me-3 fs-4"></i>
+            <h3 class="mb-0">Create New Document</h3>
+          </div>
+        </div>
+        <div class="card-body p-5">
+          <form method="post" class="needs-validation" novalidate>
+            {% csrf_token %}
+            
+            <div class="mb-4">
+              <label for="title" class="form-label fw-bold">
+                <i class="fas fa-heading me-2 text-primary"></i>Document Title
+              </label>
+              <div class="input-group">
+                <span class="input-group-text bg-light">
+                  <i class="fas fa-pencil-alt text-muted"></i>
+                </span>
+                <input type="text" class="form-control form-control-lg" id="title" name="title" 
+                       placeholder="Enter a creative title..." required>
+              </div>
+              <div class="form-text mt-2">
+                <i class="fas fa-lightbulb me-2 text-warning"></i>Choose a descriptive name that will help you find it later
+              </div>
+            </div>
+            
+            <div class="mb-4">
+              <label class="form-label fw-bold">
+                <i class="fas fa-align-left me-2 text-primary"></i>Document Type
+              </label>
+              <div class="d-flex flex-wrap gap-3">
+                <div class="form-check card document-type-card">
+                  <input class="form-check-input" type="radio" name="docType" id="blankDoc" checked>
+                  <label class="form-check-label" for="blankDoc">
+                    <div class="card-body text-center">
+                      <i class="fas fa-file-alt fa-3x mb-3 text-primary"></i>
+                      <h5>Blank Document</h5>
+                      <p class="text-muted small">Start from scratch</p>
+                    </div>
+                  </label>
+                </div>
+                
+                <div class="form-check card document-type-card">
+                  <input class="form-check-input" type="radio" name="docType" id="templateDoc">
+                  <label class="form-check-label" for="templateDoc">
+                    <div class="card-body text-center">
+                      <i class="fas fa-clone fa-3x mb-3 text-success"></i>
+                      <h5>From Template</h5>
+                      <p class="text-muted small">Use a pre-made template</p>
+                    </div>
+                  </label>
+                </div>
+                
+                <div class="form-check card document-type-card">
+                  <input class="form-check-input" type="radio" name="docType" id="uploadDoc">
+                  <label class="form-check-label" for="uploadDoc">
+                    <div class="card-body text-center">
+                      <i class="fas fa-upload fa-3x mb-3 text-info"></i>
+                      <h5>Upload File</h5>
+                      <p class="text-muted small">Import existing document</p>
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mb-4">
+              <label class="form-label fw-bold">
+                <i class="fas fa-users me-2 text-primary"></i>Collaborators
+              </label>
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Add collaborators by email..." 
+                       aria-label="Add collaborators" aria-describedby="add-collaborator">
+                <button class="btn btn-outline-secondary" type="button" id="add-collaborator">
+                  <i class="fas fa-plus"></i> Add
+                </button>
+              </div>
+              <div class="collaborators-list">
+                <div class="d-flex flex-wrap gap-2">
+                  <span class="badge bg-primary bg-opacity-10 text-primary p-2">
+                    <i class="fas fa-user me-1"></i> john@example.com
+                    <button type="button" class="btn-close btn-close-white ms-2" aria-label="Remove"></button>
+                  </span>
+                  <span class="badge bg-primary bg-opacity-10 text-primary p-2">
+                    <i class="fas fa-user me-1"></i> sarah@example.com
+                    <button type="button" class="btn-close btn-close-white ms-2" aria-label="Remove"></button>
+                  </span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center mt-5">
+              <a href="{% url 'document_list' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i> Back to Documents
+              </a>
+              <button type="submit" class="btn btn-primary btn-lg px-4">
+                <i class="fas fa-plus me-2"></i> Create Document
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
-  <button type="submit" class="btn btn-primary">Create Document</button>
-</form>
+</div>
+
+<style>
+  .document-creation-container {
+    padding: 3rem 0;
+  }
+  
+  .bg-gradient-primary {
+    background: linear-gradient(135deg, #4361ee, #3a0ca3);
+  }
+  
+  .card {
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .document-type-card {
+    flex: 1;
+    min-width: 180px;
+    cursor: pointer;
+    border-radius: 8px !important;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+  }
+  
+  .document-type-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .document-type-card .form-check-input {
+    position: absolute;
+    opacity: 0;
+  }
+  
+  .document-type-card .form-check-input:checked + .form-check-label .card {
+    border-color: #4361ee;
+    background-color: rgba(67, 97, 238, 0.05);
+  }
+  
+  .input-group-text {
+    border-right: none;
+  }
+  
+  .form-control-lg {
+    border-left: none;
+    padding-left: 0;
+  }
+  
+  .collaborators-list .badge {
+    border-radius: 20px;
+  }
+  
+  .collaborators-list .btn-close {
+    font-size: 0.7rem;
+  }
+  
+  @media (max-width: 768px) {
+    .document-type-card {
+      min-width: 100%;
+    }
+  }
+</style>
+
+<script>
+  // Document type card selection
+  document.querySelectorAll('.document-type-card').forEach(card => {
+    card.addEventListener('click', function() {
+      const radioInput = this.querySelector('.form-check-input');
+      radioInput.checked = true;
+      
+      // Remove active class from all cards first
+      document.querySelectorAll('.document-type-card').forEach(c => {
+        c.querySelector('.card').classList.remove('border-primary', 'bg-primary-light');
+      });
+      
+      // Add active class to selected card
+      this.querySelector('.card').classList.add('border-primary', 'bg-primary-light');
+    });
+  });
+  
+  // Add collaborator functionality
+  document.getElementById('add-collaborator').addEventListener('click', function() {
+    const input = this.previousElementSibling;
+    if (input.value.trim() !== '') {
+      const collaboratorList = document.querySelector('.collaborators-list .d-flex');
+      const newBadge = document.createElement('span');
+      newBadge.className = 'badge bg-primary bg-opacity-10 text-primary p-2';
+      newBadge.innerHTML = `
+        <i class="fas fa-user me-1"></i> ${input.value.trim()}
+        <button type="button" class="btn-close btn-close-white ms-2" aria-label="Remove"></button>
+      `;
+      collaboratorList.appendChild(newBadge);
+      input.value = '';
+      
+      // Add remove functionality to new badge
+      newBadge.querySelector('.btn-close').addEventListener('click', function() {
+        this.parentElement.remove();
+      });
+    }
+  });
+</script>
 {% endblock %}

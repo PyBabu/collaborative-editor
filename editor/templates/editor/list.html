@@ -1,16 +1,156 @@
 {% extends 'users/base.html' %}
+
 {% block content %}
-<h2>Your Documents</h2>
+<div class="documents-container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">
+      <i class="fas fa-folder-open text-primary me-2"></i>My Documents
+    </h2>
+    <a href="{% url 'create_document' %}" class="btn btn-primary">
+      <i class="fas fa-plus me-2"></i> New Document
+    </a>
+  </div>
 
-<a href="{% url 'create_document' %}" class="btn btn-success mb-3">+ New Document</a>
+  {% if documents %}
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for doc in documents %}
+    <div class="col">
+      <div class="document-card card h-100 shadow-sm border-0">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div>
+              <i class="fas fa-file-alt fa-2x text-secondary mb-2"></i>
+              <h5 class="card-title mb-1">
+                <a href="{% url 'editor' doc.id %}" class="text-decoration-none stretched-link">
+                  {{ doc.title|truncatechars:30 }}
+                </a>
+              </h5>
+              <small class="text-muted">Last modified: {{ doc.updated_at|timesince }} ago</small>
+            </div>
+            <div class="dropdown">
+              <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" 
+                      data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-ellipsis-v"></i>
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="{% url 'editor' doc.id %}">
+                    <i class="fas fa-edit me-2"></i>Edit
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#">
+                    <i class="fas fa-share-alt me-2"></i>Share
+                  </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <a class="dropdown-item text-danger" href="#">
+                    <i class="fas fa-trash-alt me-2"></i>Delete
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="avatar-group">
+              {% for collaborator in doc.shared_with.all|slice:":3" %}
+              <span class="avatar-sm" data-bs-toggle="tooltip" title="{{ collaborator.username }}">
+                {{ collaborator.username|first|upper }}
+              </span>
+              {% endfor %}
+              {% if doc.shared_with.count > 3 %}
+              <span class="avatar-sm bg-light text-dark">
+                +{{ doc.shared_with.count|add:"-3" }}
+              </span>
+              {% endif %}
+            </div>
+            <span class="badge bg-light text-dark">
+              <i class="fas fa-clock me-1"></i>{{ doc.updated_at|date:"M d" }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state text-center py-5">
+    <i class="fas fa-file-alt fa-4x text-muted mb-4"></i>
+    <h4>No documents yet</h4>
+    <p class="text-muted mb-4">Get started by creating your first document</p>
+    <a href="{% url 'create_document' %}" class="btn btn-primary btn-lg">
+      <i class="fas fa-plus me-2"></i> Create Document
+    </a>
+  </div>
+  {% endif %}
+</div>
 
-<ul class="list-group">
-  {% for doc in documents %}
-    <li class="list-group-item">
-      <a href="{% url 'editor' doc.id %}">{{ doc.title }}</a>
-    </li>
-  {% empty %}
-    <li class="list-group-item">No documents yet.</li>
-  {% endfor %}
-</ul>
+<style>
+  .documents-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+  
+  .document-card {
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  .document-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .avatar-group {
+    display: flex;
+  }
+  
+  .avatar-sm {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: #4361ee;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: -8px;
+    border: 2px solid white;
+  }
+  
+  .empty-state {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+  }
+  
+  .card-title {
+    transition: color 0.2s;
+  }
+  
+  .document-card:hover .card-title {
+    color: #4361ee;
+  }
+  
+  @media (max-width: 768px) {
+    .documents-container {
+      padding: 1rem;
+    }
+  }
+</style>
+
+<script>
+  // Initialize tooltips
+  document.addEventListener('DOMContentLoaded', function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  });
+</script>
 {% endblock %}

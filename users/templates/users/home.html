@@ -1,13 +1,236 @@
-<!-- templates/users/home.html -->
 {% extends 'users/base.html' %}
-{% block content %}
-<h1>Welcome to the Real-Time Collab Editor 🚀</h1>
-<p>This is a collaborative document editing tool where multiple users can work together in real-time.</p>
 
-{% if user.is_authenticated %}
-    <a href="{% url 'dashboard' %}" class="btn btn-success">Go to Dashboard</a>
-{% else %}
-    <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
-    <a href="{% url 'register' %}" class="btn btn-secondary">Register</a>
-{% endif %}
+{% block content %}
+<div class="hero-section">
+  <div class="container py-5">
+    <div class="row align-items-center">
+      <div class="col-lg-6 mb-5 mb-lg-0">
+        <h1 class="display-4 fw-bold mb-4">
+          Real-Time <span class="text-gradient">Collab Editor</span> 
+          <span class="wave-emoji">🚀</span>
+        </h1>
+        <p class="lead mb-4">
+          Create, edit, and collaborate on documents with your team in real-time. 
+          Our powerful editor lets multiple users work together seamlessly with 
+          live updates and AI-powered suggestions.
+        </p>
+        
+        <div class="d-flex flex-wrap gap-3 mb-5">
+          {% if user.is_authenticated %}
+            <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg px-4 py-3 shadow-sm">
+              <i class="fas fa-rocket me-2"></i> Go to Dashboard
+            </a>
+            <a href="{% url 'create_document' %}" class="btn btn-outline-primary btn-lg px-4 py-3">
+              <i class="fas fa-plus me-2"></i> New Document
+            </a>
+          {% else %}
+            <a href="{% url 'login' %}" class="btn btn-primary btn-lg px-4 py-3 shadow-sm">
+              <i class="fas fa-sign-in-alt me-2"></i> Get Started
+            </a>
+            <a href="{% url 'register' %}" class="btn btn-outline-primary btn-lg px-4 py-3">
+              <i class="fas fa-user-plus me-2"></i> Create Account
+            </a>
+          {% endif %}
+        </div>
+        
+        <div class="d-flex align-items-center text-muted">
+          <div class="d-flex me-4">
+            <div class="avatar-group me-2">
+              <span class="avatar-sm bg-primary">A</span>
+              <span class="avatar-sm bg-success">B</span>
+              <span class="avatar-sm bg-warning">C</span>
+            </div>
+            <span>Join 1,000+ users</span>
+          </div>
+          <div>
+            <i class="fas fa-shield-alt me-2"></i> Secure & Private
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-6">
+        <div class="editor-preview shadow-lg rounded-3 overflow-hidden">
+          <div class="editor-header bg-light p-3 d-flex align-items-center">
+            <div class="d-flex me-3">
+              <span class="dot bg-danger me-2"></span>
+              <span class="dot bg-warning me-2"></span>
+              <span class="dot bg-success"></span>
+            </div>
+            <div class="flex-grow-1 text-center fw-bold">
+              collaboration-document.md
+            </div>
+            <div class="online-users">
+              <i class="fas fa-users me-1"></i> 3
+            </div>
+          </div>
+          <div class="editor-body bg-white p-4">
+            <div class="document-content">
+              <p class="text-primary mb-2"># Project Brainstorm</p>
+              <p class="mb-2"><span class="user-caret bg-primary"></span> <strong>@Alex:</strong> Let's discuss the new features</p>
+              <p class="mb-2"><span class="user-caret bg-success"></span> <strong>@Sam:</strong> I think we should focus on the editor first</p>
+              <p class="mb-2"><span class="user-caret bg-warning"></span> <strong>@Jordan:</strong> Working on the real-time sync now</p>
+              <p class="text-muted mt-3">// Type here to join the conversation...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="features-section py-5 bg-light">
+  <div class="container">
+    <h2 class="text-center mb-5">Powerful Collaboration Features</h2>
+    
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="feature-card p-4 h-100 shadow-sm rounded-3 bg-white">
+          <div class="feature-icon bg-primary bg-opacity-10 text-primary rounded-circle mb-3">
+            <i class="fas fa-users"></i>
+          </div>
+          <h4>Real-Time Editing</h4>
+          <p>See changes from other collaborators instantly as they type, with live cursors and presence indicators.</p>
+        </div>
+      </div>
+      
+      <div class="col-md-4">
+        <div class="feature-card p-4 h-100 shadow-sm rounded-3 bg-white">
+          <div class="feature-icon bg-success bg-opacity-10 text-success rounded-circle mb-3">
+            <i class="fas fa-robot"></i>
+          </div>
+          <h4>AI Assistance</h4>
+          <p>Get smart suggestions for grammar, style, and content as you write.</p>
+        </div>
+      </div>
+      
+      <div class="col-md-4">
+        <div class="feature-card p-4 h-100 shadow-sm rounded-3 bg-white">
+          <div class="feature-icon bg-info bg-opacity-10 text-info rounded-circle mb-3">
+            <i class="fas fa-history"></i>
+          </div>
+          <h4>Version History</h4>
+          <p>Track changes and revert to any previous version of your document with ease.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .hero-section {
+    padding: 5rem 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  }
+  
+  .text-gradient {
+    background: linear-gradient(90deg, #4361ee, #3a0ca3);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+  }
+  
+  .wave-emoji {
+    animation: wave 2s infinite;
+    display: inline-block;
+    transform-origin: 70% 70%;
+  }
+  
+  @keyframes wave {
+    0% { transform: rotate(0deg); }
+    10% { transform: rotate(-10deg); }
+    20% { transform: rotate(12deg); }
+    30% { transform: rotate(-10deg); }
+    40% { transform: rotate(9deg); }
+    50% { transform: rotate(0deg); }
+    100% { transform: rotate(0deg); }
+  }
+  
+  .avatar-group {
+    display: flex;
+  }
+  
+  .avatar-sm {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    margin-right: -8px;
+    border: 2px solid white;
+  }
+  
+  .editor-preview {
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+  
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  
+  .online-users {
+    background-color: #e9ecef;
+    padding: 0.2rem 0.5rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+  }
+  
+  .user-caret {
+    width: 8px;
+    height: 16px;
+    display: inline-block;
+    margin-right: 8px;
+    opacity: 0.7;
+  }
+  
+  .document-content {
+    font-family: 'Courier New', monospace;
+    line-height: 1.6;
+  }
+  
+  .feature-card {
+    transition: transform 0.3s ease;
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .feature-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+  }
+</style>
+
+<script>
+  // Simple animation for the editor preview to make it feel alive
+  document.addEventListener('DOMContentLoaded', function() {
+    const editorLines = document.querySelectorAll('.document-content p');
+    let delay = 0;
+    
+    editorLines.forEach((line, index) => {
+      if (index > 0) {
+        line.style.opacity = '0';
+        line.style.transform = 'translateY(10px)';
+        line.style.transition = `all 0.3s ease ${delay}s`;
+        setTimeout(() => {
+          line.style.opacity = '1';
+          line.style.transform = 'translateY(0)';
+        }, 100 + (index * 200));
+        delay += 0.2;
+      }
+    });
+  });
+</script>
 {% endblock %}
