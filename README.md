@@ -17,12 +17,19 @@ This Django-based project allows users to collaboratively edit rich-text documen
 ---
 
 ## 📷 Screenshots
-
+### Home View 
+![Home]()
+### Register View 
+![Register]()
+### login View 
+![Login]()
+### About View 
+![About]()
 ### Dashboard View  
-![Dashboard](screenshots/dashboard.png)
-
+![Dashboard](suggestion.jpg)
 ### Editor with Grammar Suggestions  
-![Editor](screenshots/editor_view.png)
+![Editor](suggestion.jpg)
+
 
 ---
 
