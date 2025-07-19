@@ -18,13 +18,13 @@ This Django-based project allows users to collaboratively edit rich-text documen
 
 ## 📷 Screenshots
 ### Home View 
-![Home]()
+![Home](HOME page.jpg)
 ### Register View 
-![Register]()
+![Register](register.jpg)
 ### login View 
-![Login]()
+![Login](signin.jpg)
 ### About View 
-![About]()
+![About](about dev.jpg)
 ### Dashboard View  
 ![Dashboard](suggestion.jpg)
 ### Editor with Grammar Suggestions  
