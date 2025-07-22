@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-ff0l2$_j#%cl0mh$a(k(6y2)+37j7$fq)@kk^vo6a+=4qky1wd
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['collaborative-editor-5epi.onrender.com', 'localhost', '127.0.0.1']
+
 
 
 # Application definition
