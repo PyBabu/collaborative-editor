@@ -20,12 +20,17 @@ https://docs.djangoproject.com/en/5.2/howto/deployment/asgi/
 
 # collab_editor/asgi.py
 import os
+import django
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
 from channels.auth import AuthMiddlewareStack
-import editor.routing
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'collab_editor.settings')
+
+# Important: Setup Django before importing routing
+django.setup()
+
+import editor.routing  # <-- must come after django.setup()
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
@@ -35,5 +40,6 @@ application = ProtocolTypeRouter({
         )
     ),
 })
+
 
 
