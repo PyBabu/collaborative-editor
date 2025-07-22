@@ -27,6 +27,11 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['collaborative-editor-5epi.onrender.com', 'localhost', '127.0.0.1']
 
+# csrf
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://collaborative-editor-5epi.onrender.com'
+]
 
 
 # Application definition
